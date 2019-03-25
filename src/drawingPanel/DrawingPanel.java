@@ -74,6 +74,7 @@ public class DrawingPanel extends JPanel {
 			if(event.getClickCount() == 1) {
 				//처음 점이면 init, 두번째점이면 continue
 				initDrawing(event.getX(), event.getY());
+				continueDrawing(event.getX(), event.getY());
 			} else if (event.getClickCount() == 2) {
 				finishDrawing(event.getX(), event.getY());
 			}
