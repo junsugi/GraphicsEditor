@@ -17,6 +17,10 @@ public abstract class Shape {
 		this.y2 = y;
 	}
 	
-	abstract public void draw(Graphics graphics);
+	public void addPoint(int x, int y) {
+		
+		
+	}
 	
+	abstract public void draw(Graphics graphics);
 }
