@@ -12,7 +12,11 @@ import shape.Shape;
 
 public class DrawingPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
-
+	
+	//상태를 n개의 점을 사용하는 도형, 두 점을 사용하는 도형으로 나눠라.
+	private enum EActionState {eReady, eCMCDrawing, ePDRDrawing};
+	private EActionState eActionState;
+	
 	private MouseHandler mouseHandler;
 	
 	private Shape currentTool;
@@ -22,6 +26,8 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	public DrawingPanel() {
+		this.eActionState = EActionState.eReady;
+		
 		this.setBackground(Color.white);
 		
 		this.mouseHandler = new MouseHandler();
@@ -58,9 +64,9 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	private void finishDrawing(int x, int y) {
-		this.drawShape();
-		this.currentTool.setPoint(x, y);
-		this.drawShape();
+//		this.drawShape();
+//		this.currentTool.setPoint(x, y);
+//		this.drawShape();
 	}
 
 	//잡다한 코드 넣지말고 함수 호출만 한다. (교통정리만 한다.)
@@ -68,33 +74,59 @@ public class DrawingPanel extends JPanel {
 		//같은 위치에서 press와 release가 동시에 일어난 일.
 		//응용이벤트, 원래 있는 이벤트가 아니다.
 		//pressed와 release와 clicked에 동시에 작업하면 더블클릭같은 함수 호출이 일어난다.
+		
 		@Override
 		public void mouseClicked(MouseEvent event) {
-			//클릭이면 initdrawing 더블클릭이면 finishdrawing
 			if(event.getClickCount() == 1) {
-				//처음 점이면 init, 두번째점이면 continue
-				initDrawing(event.getX(), event.getY());
-				continueDrawing(event.getX(), event.getY());
+				mouse1Clicked(event);
 			} else if (event.getClickCount() == 2) {
-				finishDrawing(event.getX(), event.getY());
+				mouse2Clicked(event);
 			}
 		} 
 
+		private void mouse1Clicked(MouseEvent event) {
+			if(eActionState.equals(EActionState.eReady)) {
+				initDrawing(event.getX(), event.getY());
+				eActionState = EActionState.eCMCDrawing;
+			} else if(eActionState.equals(EActionState.eCMCDrawing)){
+				finishDrawing(event.getX(), event.getY());
+				eActionState = EActionState.eReady;
+			}
+		}
+
+		private void mouse2Clicked(MouseEvent event) {
+		}
+
 		@Override
 		public void mousePressed(MouseEvent event) {
-			initDrawing(event.getX(), event.getY());
+			if(eActionState.equals(EActionState.eReady)) {
+				initDrawing(event.getX(), event.getY());
+				eActionState = EActionState.ePDRDrawing;
+			} 
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent event) {
-			finishDrawing(event.getX(), event.getY());
+			if(eActionState.equals(EActionState.ePDRDrawing)) {
+				finishDrawing(event.getX(), event.getY());
+				eActionState = EActionState.eReady;
+			}
 		}
 
-		//지운다 = 배경화면을 다시 그린다, 배경화면으로 다시 칠한다.
 		@Override
 		public void mouseDragged(MouseEvent event) {
-			keepDrawing(event.getX(), event.getY());
+			if(eActionState.equals(EActionState.ePDRDrawing)) {
+				keepDrawing(event.getX(), event.getY());
+			}
 		}
+		
+		@Override
+		public void mouseMoved(MouseEvent event) {
+			if(eActionState.equals(EActionState.eCMCDrawing)) {
+				keepDrawing(event.getX(), event.getY());
+			}
+		}
+		
 
 		@Override
 		public void mouseEntered(MouseEvent event) {}
@@ -102,9 +134,5 @@ public class DrawingPanel extends JPanel {
 		@Override
 		public void mouseExited(MouseEvent event) {}
 
-		@Override
-		public void mouseMoved(MouseEvent event) {
-			//keepdrawing 해라
-		}		
 	}
 }
