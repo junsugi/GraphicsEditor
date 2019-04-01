@@ -19,7 +19,17 @@ public abstract class Shape {
 	
 	public void addPoint(int x, int y) {
 		
-		
+	}
+	
+	public Shape clone() {
+		try {
+			return (Shape)this.getClass().newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	abstract public void draw(Graphics graphics);

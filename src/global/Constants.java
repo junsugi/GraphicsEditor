@@ -1,10 +1,6 @@
 package global;
 
-import shape.Ellipse;
-import shape.Line;
-import shape.Rectangle;
-import shape.Select;
-import shape.Shape;
+import shape.*;
 
 public class Constants {
 
@@ -28,7 +24,8 @@ public class Constants {
 		select("select", new Select()),
 		rectangle("retangle", new Rectangle()),
 		ellipse("ellipse", new Ellipse()),
-		line("line", new Line())
+		line("line", new Line()),
+		polygon("polygon", new Polygon())
 		;
 		
 		private String text;

@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Vector;
 
 import javax.swing.JPanel;
 
@@ -14,11 +15,13 @@ public class DrawingPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	//상태를 n개의 점을 사용하는 도형, 두 점을 사용하는 도형으로 나눠라.
-	private enum EActionState {eReady, eCMCDrawing, ePDRDrawing};
+	private enum EActionState {eReady, e2PDrawing, eNPDrawing};
 	private EActionState eActionState;
 	
 	private MouseHandler mouseHandler;
 	
+	private Vector<Shape> shapeVector;
+	private Shape currentShape;
 	private Shape currentTool;
 
 	public void setCurrentTool(EToolbar currentTool) {
@@ -34,7 +37,17 @@ public class DrawingPanel extends JPanel {
 		this.addMouseListener(this.mouseHandler);		//버튼이벤트
 		this.addMouseMotionListener(this.mouseHandler);	//마우스의 움직임을 인지하는 이벤트
 		
+		this.shapeVector = new Vector<Shape>();
 		this.currentTool = EToolbar.select.getShape();
+	}
+	
+	public void paint(Graphics graphics) {
+		//부모님 먼저 그리세요. 이거 안하면 그림이 자칫 잘못하면 깨진다.
+		super.paint(graphics);
+		
+		for(Shape shape : this.shapeVector) {
+			shape.draw(graphics);
+		}
 	}
 	
 	private void drawShape() {
@@ -43,30 +56,28 @@ public class DrawingPanel extends JPanel {
 		//메인프레임이 받아서 drawingPanel(자식)로 전달해준다.
 		Graphics graphics = this.getGraphics();
 		graphics.setXORMode(getBackground());
-		this.currentTool.draw(graphics);
+		this.currentShape.draw(graphics);
 	}
 	
 	private void initDrawing(int x, int y) {
-		this.currentTool.setOrigin(x, y);
+		this.currentShape = this.currentTool.clone();
+		this.currentShape.setOrigin(x, y);
 		this.drawShape();
 	}
 	
 	private void keepDrawing(int x, int y) {
 		this.drawShape();
-		this.currentTool.setPoint(x, y);
+		this.currentShape.setPoint(x, y);
 		this.drawShape();
 	}
 	
 	private void continueDrawing(int x, int y) {
 		//중간점을 찍는 함수 (폴리곤)
-		this.currentTool.addPoint(x, y);
-
+		this.currentShape.addPoint(x, y);
 	}
 	
 	private void finishDrawing(int x, int y) {
-//		this.drawShape();
-//		this.currentTool.setPoint(x, y);
-//		this.drawShape();
+		this.shapeVector.add(this.currentShape);
 	}
 
 	//잡다한 코드 넣지말고 함수 호출만 한다. (교통정리만 한다.)
@@ -87,27 +98,30 @@ public class DrawingPanel extends JPanel {
 		private void mouse1Clicked(MouseEvent event) {
 			if(eActionState.equals(EActionState.eReady)) {
 				initDrawing(event.getX(), event.getY());
-				eActionState = EActionState.eCMCDrawing;
-			} else if(eActionState.equals(EActionState.eCMCDrawing)){
-				finishDrawing(event.getX(), event.getY());
-				eActionState = EActionState.eReady;
+				eActionState = EActionState.eNPDrawing;
+			} else if (eActionState.equals(EActionState.eNPDrawing)) {
+				continueDrawing(event.getX(), event.getY());
 			}
 		}
 
 		private void mouse2Clicked(MouseEvent event) {
+			if(eActionState.equals(EActionState.eNPDrawing)) {
+				finishDrawing(event.getX(), event.getY());
+				eActionState = EActionState.eReady;
+			}
 		}
 
 		@Override
 		public void mousePressed(MouseEvent event) {
 			if(eActionState.equals(EActionState.eReady)) {
 				initDrawing(event.getX(), event.getY());
-				eActionState = EActionState.ePDRDrawing;
+				eActionState = EActionState.e2PDrawing;
 			} 
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent event) {
-			if(eActionState.equals(EActionState.ePDRDrawing)) {
+			if(eActionState.equals(EActionState.e2PDrawing)) {
 				finishDrawing(event.getX(), event.getY());
 				eActionState = EActionState.eReady;
 			}
@@ -115,19 +129,18 @@ public class DrawingPanel extends JPanel {
 
 		@Override
 		public void mouseDragged(MouseEvent event) {
-			if(eActionState.equals(EActionState.ePDRDrawing)) {
+			if(eActionState.equals(EActionState.e2PDrawing)) {
 				keepDrawing(event.getX(), event.getY());
 			}
 		}
 		
 		@Override
 		public void mouseMoved(MouseEvent event) {
-			if(eActionState.equals(EActionState.eCMCDrawing)) {
+			if(eActionState.equals(EActionState.eNPDrawing)) {
 				keepDrawing(event.getX(), event.getY());
 			}
 		}
 		
-
 		@Override
 		public void mouseEntered(MouseEvent event) {}
 
