@@ -6,6 +6,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		mainFrame = new MainFrame();
+		mainFrame.initialize();
 		mainFrame.setVisible(true);
 	}
 

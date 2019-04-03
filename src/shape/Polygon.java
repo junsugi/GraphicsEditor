@@ -1,46 +1,37 @@
 package shape;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public class Polygon extends Shape{
-	
-	private final static int nMaxPoint = 20;
-	private int[] xPoints;
-	private int[] yPoints;
-	private int nPoints;
+	private java.awt.Polygon polygon;
 
 	public Polygon() {
-		this.xPoints = new int[nMaxPoint];
-		this.yPoints = new int[nMaxPoint];
-		this.nPoints = 0;
+		super();
+		this.shape = new java.awt.Polygon();
+		this.polygon = (java.awt.Polygon) this.shape;
 	}
 	
 	public void setOrigin(int x, int y) {
-		this.xPoints[this.nPoints] = x;
-		this.yPoints[this.nPoints] = y;
-		this.nPoints += 1;
-		
-		this.xPoints[this.nPoints] = x;
-		this.yPoints[this.nPoints] = y;
-		this.nPoints += 1;
+		this.polygon.addPoint(x, y);
+		this.polygon.addPoint(x, y);
 	}
 	
 	public void setPoint(int x, int y) {
-		this.xPoints[this.nPoints-1] = x;
-		this.yPoints[this.nPoints-1] = y;
+		this.polygon.xpoints[this.polygon.npoints - 1] = x;
+		this.polygon.ypoints[this.polygon.npoints - 1] = y;
 	}
 	
 	//현재점을 고정시키고 하나를 더 추가시킨다.
 	public void addPoint(int x, int y) {
 		//한 점을 추가
-		this.xPoints[this.nPoints] = x;
-		this.yPoints[this.nPoints] = y;
-		this.nPoints += 1;
+		this.polygon.addPoint(x, y);
 	}
 	
 	@Override
 	public void draw(Graphics graphics) {
-		graphics.drawPolygon(xPoints, yPoints, nPoints);
+		Graphics2D graphics2d = (Graphics2D) graphics;
+		graphics2d.draw(this.polygon);
 	}
 
 }

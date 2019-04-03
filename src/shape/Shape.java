@@ -1,26 +1,11 @@
 package shape;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public abstract class Shape {
-	//원점은 꼭 있되, 두 점을 전부 가질 필요는 없다.
-	protected int x1, y1, x2, y2;
 	
-	public void setOrigin(int x, int y) {
-		this.x1 = x;
-		this.y1 = y;
-		this.x2 = x;
-		this.y2 = y;
-	}
-	
-	public void setPoint(int x, int y) {
-		this.x2 = x;
-		this.y2 = y;
-	}
-	
-	public void addPoint(int x, int y) {
-		
-	}
-	
+	protected java.awt.Shape shape;
+
 	public Shape clone() {
 		try {
 			return (Shape)this.getClass().newInstance();
@@ -32,5 +17,17 @@ public abstract class Shape {
 		return null;
 	}
 	
-	abstract public void draw(Graphics graphics);
+	public void draw(Graphics graphics) {
+		Graphics2D graphics2d = (Graphics2D) graphics;
+		graphics2d.draw(this.shape);
+	}
+	
+	public boolean contains(int x, int y) {
+		return this.shape.contains(x, y);
+	}
+	
+	//무슨 도형이 올지 모르기 때문에 여기서 값을 계산할 수가 없다.
+	abstract public void setOrigin(int x, int y);
+	abstract public void setPoint(int x, int y);
+	abstract public void addPoint(int x, int y);
 }
