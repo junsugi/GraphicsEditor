@@ -1,6 +1,7 @@
 package shape;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public class Ellipse extends Shape{
 	
@@ -24,7 +25,20 @@ public class Ellipse extends Shape{
 	}
 
 	@Override
-	public void draw(Graphics graphics) {
-		graphics.drawOval(x1, y1, x2 - x1, y2 - y1);
+	public void draw(Graphics2D graphics2d) {
+		graphics2d.drawOval(x1, y1, x2 - x1, y2 - y1);
 	}
+
+	@Override
+	public void keepMoving(int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void finishMoving(int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

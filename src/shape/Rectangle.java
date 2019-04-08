@@ -22,4 +22,21 @@ public class Rectangle extends Shape{
 	
 	public void addPoint(int x, int y) {
 	}
+
+	@Override
+	public void keepMoving(int x, int y) {
+		int dw = x - this.px;
+		int dh = y - this.py;
+		
+		this.rectangle.setLocation(this.rectangle.x + dw, this.rectangle.y + dh);
+		
+		this.px = x;
+		this.py = y;
+	}
+
+	@Override
+	public void finishMoving(int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
 }

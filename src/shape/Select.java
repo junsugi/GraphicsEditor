@@ -1,6 +1,7 @@
 package shape;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public class Select extends Shape{
 	
@@ -24,6 +25,18 @@ public class Select extends Shape{
 	}
 
 	@Override
-	public void draw(Graphics graphics) {
+	public void draw(Graphics2D graphics2d) {
+	}
+
+	@Override
+	public void keepMoving(int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void finishMoving(int x, int y) {
+		// TODO Auto-generated method stub
+		
 	}
 }

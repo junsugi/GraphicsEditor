@@ -1,6 +1,7 @@
 package drawingPanel;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -9,13 +10,14 @@ import java.util.Vector;
 import javax.swing.JPanel;
 
 import global.Constants.EToolbar;
+import shape.Polygon;
 import shape.Shape;
 
 public class DrawingPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	//상태를 n개의 점을 사용하는 도형, 두 점을 사용하는 도형으로 나눠라.
-	private enum EActionState {eReady, e2PDrawing, eNPDrawing, eMoving};
+	private enum EActionState {eReady, e2PDrawing, eNPDrawing, eMoving, eResizing, eRotating};
 	private EActionState eActionState;
 	
 	private MouseHandler mouseHandler;
@@ -32,6 +34,7 @@ public class DrawingPanel extends JPanel {
 		this.eActionState = EActionState.eReady;
 		
 		this.setBackground(Color.white);
+		this.setForeground(Color.black);
 		
 		this.mouseHandler = new MouseHandler();
 		this.addMouseListener(this.mouseHandler);		//버튼이벤트
@@ -45,10 +48,10 @@ public class DrawingPanel extends JPanel {
 	
 	public void paint(Graphics graphics) {
 		//부모님 먼저 그리세요. 이거 안하면 그림이 자칫 잘못하면 깨진다.
-		super.paint(graphics);
-		
+		Graphics2D graphics2d = (Graphics2D)graphics;
+		super.paint(graphics2d);
 		for(Shape shape : this.shapeVector) {
-			shape.draw(graphics);
+			shape.draw(graphics2d);
 		}
 	}
 	
@@ -56,9 +59,9 @@ public class DrawingPanel extends JPanel {
 		//종합그림도구세트, 운영체제가 가지고 있다. 운영체제가 사용하는 폰트와 색상을 사용하게 된다.
 		//운영체제가 가지고 있는 그림 도구를 그대로 받아온다.
 		//메인프레임이 받아서 drawingPanel(자식)로 전달해준다.
-		Graphics graphics = this.getGraphics();
-		graphics.setXORMode(getBackground());
-		this.currentShape.draw(graphics);
+		Graphics2D graphics2d = (Graphics2D)this.getGraphics();
+		graphics2d.setXORMode(this.getBackground());
+		this.currentShape.draw(graphics2d);
 	}
 	//좌표를 주고 밑에 누가 있냐 없냐를 판단.
 	//있으면 그리고 없으면 안그린다.
@@ -76,7 +79,7 @@ public class DrawingPanel extends JPanel {
 	private void initDrawing(int x, int y) {
 		this.currentShape = this.currentTool.clone();
 		this.currentShape.setOrigin(x, y);
-		this.drawShape();
+//		this.drawShape();
 	}
 	
 	private void keepDrawing(int x, int y) {
@@ -95,8 +98,17 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	private void initMoving(int x, int y) {
-		// TODO Auto-generated method stub
-		
+		this.currentShape.initMoving(x, y);
+	}
+	
+	private void keepMoving(int x, int y) {
+		this.drawShape();
+		this.currentShape.keepMoving(x, y);
+		this.drawShape();
+	}
+	
+	private void finishMoving(int x, int y) {
+		this.currentShape.finishMoving(x, y);
 	}
 
 	//잡다한 코드 넣지말고 함수 호출만 한다. (교통정리만 한다.)
@@ -129,18 +141,27 @@ public class DrawingPanel extends JPanel {
 				eActionState = EActionState.eReady;
 			}
 		}
-
+		
 		@Override
 		public void mousePressed(MouseEvent event) {
 			if(eActionState.equals(EActionState.eReady)) {
 				if(onShape(event.getX(), event.getY())){
 					initMoving(event.getX(), event.getY());
 					eActionState = EActionState.eMoving;
-				} else {
+				} else if(!(currentTool instanceof Polygon)){
 					initDrawing(event.getX(), event.getY());
 					eActionState = EActionState.e2PDrawing;
 				}
 			} 
+		}
+		
+		@Override
+		public void mouseDragged(MouseEvent event) {
+			if(eActionState.equals(EActionState.e2PDrawing)) {
+				keepDrawing(event.getX(), event.getY());
+			} else if (eActionState.equals(EActionState.eMoving)) {
+				keepMoving(event.getX(), event.getY());
+			}
 		}
 
 		@Override
@@ -148,15 +169,9 @@ public class DrawingPanel extends JPanel {
 			if(eActionState.equals(EActionState.e2PDrawing)) {
 				finishDrawing(event.getX(), event.getY());
 				eActionState = EActionState.eReady;
-			}
-		}
-
-		@Override
-		public void mouseDragged(MouseEvent event) {
-			if(eActionState.equals(EActionState.e2PDrawing)) {
-				keepDrawing(event.getX(), event.getY());
 			} else if (eActionState.equals(EActionState.eMoving)) {
-				keepDrawing(event.getX(), event.getY());
+				finishMoving(event.getX(), event.getY());	
+				eActionState = EActionState.eReady;
 			}
 		}
 		
@@ -164,9 +179,6 @@ public class DrawingPanel extends JPanel {
 		public void mouseMoved(MouseEvent event) {
 			if(eActionState.equals(EActionState.eNPDrawing)) {
 				keepDrawing(event.getX(), event.getY());
-			} else if (eActionState.equals(EActionState.eMoving)) {
-				finishDrawing(event.getX(), event.getY());
-				eActionState = EActionState.eReady;
 			}
 		}
 		
