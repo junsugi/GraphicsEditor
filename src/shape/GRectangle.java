@@ -1,11 +1,11 @@
 package shape;
 
-public class Rectangle extends Shape{
+public class GRectangle extends GShape{
 	
 	//Adaptation
 	private java.awt.Rectangle rectangle;
 
-	public Rectangle() {
+	public GRectangle() {
 		super();
 		this.shape = new java.awt.Rectangle();
 		this.rectangle = (java.awt.Rectangle) this.shape;

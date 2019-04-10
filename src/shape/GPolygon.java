@@ -2,10 +2,10 @@ package shape;
 
 import java.awt.Graphics2D;
 
-public class Polygon extends Shape {
+public class GPolygon extends GShape {
 	private java.awt.Polygon polygon;
 
-	public Polygon() {
+	public GPolygon() {
 		super();
 		this.polygon = new java.awt.Polygon();
 		this.shape = this.polygon;

@@ -8,8 +8,8 @@ import javax.swing.JButton;
 import javax.swing.JRadioButton;
 import javax.swing.JToolBar;
 
-import drawingPanel.DrawingPanel;
-import global.Constants.EToolbar;
+import drawingPanel.GDrawingPanel;
+import global.GConstants.EToolbar;
 
 public class ToolBar extends JToolBar {
 	//attributes
@@ -19,9 +19,9 @@ public class ToolBar extends JToolBar {
 	private Vector<JRadioButton> buttons;
 
 	//association
-	private DrawingPanel drawingPanel;
+	private GDrawingPanel drawingPanel;
 	
-	public void associate(DrawingPanel drawingPanel) {
+	public void associate(GDrawingPanel drawingPanel) {
 		this.drawingPanel = drawingPanel;	
 	}
 	//여기서 자식을 new해주고 속성들의 값을 초기화 해주는 곳이다.

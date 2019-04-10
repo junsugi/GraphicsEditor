@@ -2,7 +2,7 @@ package global;
 
 import shape.*;
 
-public class Constants {
+public class GConstants {
 
 	public enum EMainFrame {
 		x(200),
@@ -21,23 +21,23 @@ public class Constants {
 	}
 	
 	public enum EToolbar {
-		select("select", new Select()),
-		rectangle("retangle", new Rectangle()),
-		ellipse("ellipse", new Ellipse()),
-		line("line", new Line()),
-		polygon("polygon", new Polygon())
+		select("select", new GSelect()),
+		rectangle("retangle", new GRectangle()),
+		ellipse("ellipse", new GEllipse()),
+		line("line", new GLine()),
+		polygon("polygon", new GPolygon())
 		;
 		
 		private String text;
-		private Shape shape;
-		private	EToolbar(String text, Shape shape){
+		private GShape shape;
+		private	EToolbar(String text, GShape shape){
 			this.text = text;
 			this.shape = shape;
 		}
 		public String getText() {
 			return this.text;
 		}
-		public Shape getShape() {
+		public GShape getShape() {
 			return this.shape;
 		}
 	}

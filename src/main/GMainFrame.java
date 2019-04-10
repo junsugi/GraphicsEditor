@@ -4,20 +4,20 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
-import drawingPanel.DrawingPanel;
-import global.Constants.EMainFrame;
-import menu.MenuBar;
+import drawingPanel.GDrawingPanel;
+import global.GConstants.EMainFrame;
+import menu.GMenuBar;
 import toolbar.ToolBar;
 
-public class MainFrame extends JFrame {
+public class GMainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	//Components
-	private MenuBar menuBar;
+	private GMenuBar menuBar;
 	private ToolBar toolBar;
-	private DrawingPanel drawingPanel;
+	private GDrawingPanel drawingPanel;
 	
-	public MainFrame() {
+	public GMainFrame() {
 		//속성부터 셋팅하고 속성은 내부에서 셋팅하기
 		//attributes
 		this.setLocation(EMainFrame.x.getValue(), EMainFrame.y.getValue());
@@ -27,13 +27,13 @@ public class MainFrame extends JFrame {
 		this.setLayout(new BorderLayout());
 		
 		//components = 자식
-		this.menuBar = new MenuBar();
+		this.menuBar = new GMenuBar();
 		this.setJMenuBar(this.menuBar);
 		
 		this.toolBar = new ToolBar();
 		this.add(this.toolBar, BorderLayout.NORTH);
 		
-		this.drawingPanel = new DrawingPanel();
+		this.drawingPanel = new GDrawingPanel();
 		this.add(this.drawingPanel, BorderLayout.CENTER);
 		
 		//associations

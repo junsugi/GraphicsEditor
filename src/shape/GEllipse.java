@@ -3,7 +3,7 @@ package shape;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-public class Select extends Shape{
+public class GEllipse extends GShape{
 	
 	//원점은 꼭 있되, 두 점을 전부 가질 필요는 없다.
 	protected int x1, y1, x2, y2;
@@ -26,6 +26,7 @@ public class Select extends Shape{
 
 	@Override
 	public void draw(Graphics2D graphics2d) {
+		graphics2d.drawOval(x1, y1, x2 - x1, y2 - y1);
 	}
 
 	@Override
@@ -39,4 +40,5 @@ public class Select extends Shape{
 		// TODO Auto-generated method stub
 		
 	}
+	
 }

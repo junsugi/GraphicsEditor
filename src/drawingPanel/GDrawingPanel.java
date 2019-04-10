@@ -9,28 +9,28 @@ import java.util.Vector;
 
 import javax.swing.JPanel;
 
-import global.Constants.EToolbar;
-import shape.Polygon;
-import shape.Shape;
+import global.GConstants.EToolbar;
+import shape.GPolygon;
+import shape.GShape;
+import shape.GShape.EOnState;
 
-public class DrawingPanel extends JPanel {
+public class GDrawingPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	//상태를 n개의 점을 사용하는 도형, 두 점을 사용하는 도형으로 나눠라.
 	private enum EActionState {eReady, e2PDrawing, eNPDrawing, eMoving, eResizing, eRotating};
 	private EActionState eActionState;
-	
 	private MouseHandler mouseHandler;
 	
-	private Vector<Shape> shapeVector;
-	private Shape currentShape;
-	private Shape currentTool;
+	private Vector<GShape> shapeVector;
+	private GShape currentShape;
+	private GShape currentTool;
 
 	public void setCurrentTool(EToolbar currentTool) {
 		this.currentTool = currentTool.getShape();
 	}
 	
-	public DrawingPanel() {
+	public GDrawingPanel() {
 		this.eActionState = EActionState.eReady;
 		
 		this.setBackground(Color.white);
@@ -40,7 +40,7 @@ public class DrawingPanel extends JPanel {
 		this.addMouseListener(this.mouseHandler);		//버튼이벤트
 		this.addMouseMotionListener(this.mouseHandler);	//마우스의 움직임을 인지하는 이벤트
 		
-		this.shapeVector = new Vector<Shape>();
+		this.shapeVector = new Vector<GShape>();
 	}
 	
 	public void initialize() {
@@ -50,7 +50,7 @@ public class DrawingPanel extends JPanel {
 		//부모님 먼저 그리세요. 이거 안하면 그림이 자칫 잘못하면 깨진다.
 		Graphics2D graphics2d = (Graphics2D)graphics;
 		super.paint(graphics2d);
-		for(Shape shape : this.shapeVector) {
+		for(GShape shape : this.shapeVector) {
 			shape.draw(graphics2d);
 		}
 	}
@@ -65,21 +65,31 @@ public class DrawingPanel extends JPanel {
 	}
 	//좌표를 주고 밑에 누가 있냐 없냐를 판단.
 	//있으면 그리고 없으면 안그린다.
-	private boolean onShape(int x, int y) {
+	private EOnState onShape(int x, int y) {
 		this.currentShape = null;
-		for(Shape shape : this.shapeVector) {
-			if(shape.contains(x, y)) {
+		for(GShape shape : this.shapeVector) {
+			EOnState eOnstate = shape.onShape(x, y);
+			if(eOnstate != null) {
 				this.currentShape = shape;
-				return true;
+				return eOnstate;
 			}
 		}
-		return false;
+		return null;
+	}
+	
+	//actionstate를 바꿔줘야 한다.
+	//아무 shape에도 없다 = null
+	//currentShape에 있으면 
+	//onShape이 move, resize, rotate
+	//null이면 drawing이 두 종류
+	private EActionState defineActionState(int x, int y) {
+		EOnState eOnstate = this.onShape(x, y);
+		return eActionState;
 	}
 	
 	private void initDrawing(int x, int y) {
 		this.currentShape = this.currentTool.clone();
 		this.currentShape.setOrigin(x, y);
-//		this.drawShape();
 	}
 	
 	private void keepDrawing(int x, int y) {
@@ -145,16 +155,17 @@ public class DrawingPanel extends JPanel {
 		@Override
 		public void mousePressed(MouseEvent event) {
 			if(eActionState.equals(EActionState.eReady)) {
+				eActionState = defineActionState(event.getX(), event.getY());
 				if(onShape(event.getX(), event.getY())){
 					initMoving(event.getX(), event.getY());
 					eActionState = EActionState.eMoving;
-				} else if(!(currentTool instanceof Polygon)){
+				} else if(!(currentTool instanceof GPolygon)){
 					initDrawing(event.getX(), event.getY());
 					eActionState = EActionState.e2PDrawing;
 				}
 			} 
 		}
-		
+
 		@Override
 		public void mouseDragged(MouseEvent event) {
 			if(eActionState.equals(EActionState.e2PDrawing)) {
