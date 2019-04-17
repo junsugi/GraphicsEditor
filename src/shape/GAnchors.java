@@ -8,8 +8,8 @@ import java.util.Vector;
 
 public class GAnchors {
 
-	private final static int w = 20;
-	private final static int h = 20;
+	private final static int w = 10;
+	private final static int h = 10;
 	private final static int dw = w / 2;
 	private final static int dh = h / 2;
 	

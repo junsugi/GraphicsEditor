@@ -125,7 +125,6 @@ public class GDrawingPanel extends JPanel {
 		Graphics2D graphics2d = (Graphics2D)this.getGraphics();
 		graphics2d.setXORMode(this.getBackground());
 		this.shapeVector.add(this.currentShape);
-		this.currentShape.drawAnchors(graphics2d);
 	}
 	
 	//처음에 앵커를 그렸는데, 멈췄다가 하면 또 그린다. 그래서 잔상이 남는다.
@@ -146,8 +145,42 @@ public class GDrawingPanel extends JPanel {
 	private void finishMoving(int x, int y) {
 		this.currentShape.finishMoving(x, y);
 	}
+	
+	
+	private void initResizing(int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
 
-	//잡다한 코드 넣지말고 함수 호출만 한다. (교통정리만 한다.)
+	private void initRotating(int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
+	private void keepRotating(int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void keepResizing(int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private void finishRotating(int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void finishResizing(int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
+
+	//잡다한 코드 넣지말고 함수 호출만 한다. (교통정리만 한다. event action mapping, control tower, state transition(=event) mapping)
 	private class MouseHandler implements MouseListener, MouseMotionListener  {
 		//같은 위치에서 press와 release가 동시에 일어난 일.
 		//응용이벤트, 원래 있는 이벤트가 아니다.
@@ -195,20 +228,26 @@ public class GDrawingPanel extends JPanel {
 		
 		@Override
 		public void mousePressed(MouseEvent event) {
+			//드로잉패널의 상태 = eActionState
 			if(eActionState.equals(EActionState.eReady)) {
+				//드로잉패널이 무엇을 할지를 판단하는 곳
+				//프레스로 시작되는 모든 이벤트를 판단하는 곳.
 				defineActionState(event.getX(), event.getY());
 				if(eActionState.equals(EActionState.eDrawing)){	
+					//제약조건, 어떤 도구를 선택했느냐에 따라 달라진다.
 					if(!(currentTool instanceof GPolygon)) {
 						initDrawing(event.getX(), event.getY());						
 					} else {
+						//이벤트의 모호성때문에 추가한 부분, 사실상 필요없는 부분이다.
+						//클릭으로 보내버린다.
 						eActionState = EActionState.eReady;
 					}
 				} else if(eActionState.equals(EActionState.eMoving)){
 					initMoving(event.getX(), event.getY());
 				} else if (eActionState.equals(EActionState.eRotating)) {
-					
+					initRotating(event.getX(), event.getY());
 				} else if (eActionState.equals(EActionState.eResizing)) {
-					
+					initResizing(event.getX(), event.getY());
 				}
 			} 
 		}
@@ -222,9 +261,9 @@ public class GDrawingPanel extends JPanel {
 			} else if (eActionState.equals(EActionState.eMoving)) {
 				keepMoving(event.getX(), event.getY());
 			} else if (eActionState.equals(EActionState.eResizing)) {
-				
+				keepResizing(event.getX(), event.getY());
 			} else if (eActionState.equals(EActionState.eRotating)) {
-
+				keepRotating(event.getX(), event.getY());
 			}
 		}
 
@@ -239,12 +278,14 @@ public class GDrawingPanel extends JPanel {
 				finishMoving(event.getX(), event.getY());	
 				eActionState = EActionState.eReady;
 			} else if (eActionState.equals(EActionState.eResizing)) {
-				//finishResizing()
+				finishResizing(event.getX(), event.getY());
+				eActionState = EActionState.eReady;
 			} else if (eActionState.equals(EActionState.eRotating)) {
-				//finishRotating()
+				finishRotating(event.getX(), event.getY());
+				eActionState = EActionState.eReady;
 			}
 		}
-		
+
 		@Override
 		public void mouseEntered(MouseEvent event) {}
 

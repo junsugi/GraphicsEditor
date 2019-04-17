@@ -35,8 +35,6 @@ public class GRectangle extends GShape{
 	}
 
 	@Override
-	public void finishMoving(int x, int y) {
-		// TODO Auto-generated method stub
-		
+	public void finishMoving(int x, int y) {		
 	}
 }

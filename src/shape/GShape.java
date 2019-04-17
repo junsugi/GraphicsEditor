@@ -40,10 +40,6 @@ public abstract class GShape {
 			this.anchors.draw(graphics2d);
 		}
 	}
-	public void drawAnchors(Graphics2D graphics2d) {
-		this.anchors.setBoundingRect(this.shape.getBounds());
-		this.anchors.draw(graphics2d);
-	}
 	
 	//어느 앵커에 있는지 확인하는 메서드
 	public EOnState onShape(int x, int y) {
@@ -69,8 +65,8 @@ public abstract class GShape {
 	public void initMoving(int x, int y, Graphics2D graphics2d) {
 		this.px = x;
 		this.py = y;
-		this.selected = true;
 		if(!this.selected) {
+			this.selected = true;
 			this.anchors.setBoundingRect(this.shape.getBounds());
 			this.anchors.draw(graphics2d);
 		}
