@@ -5,7 +5,8 @@ import shape.GAnchors.EAnchors;
 
 public abstract class GShape {
 	
-	public enum EOnState {eOnshape, eOnResize, eOnRotate};
+	//eOnShape = Move
+	public enum EOnState {eOnShape, eOnResize, eOnRotate};
 	protected java.awt.Shape shape;
 	//previous x,y
 	protected int px, py;
@@ -19,9 +20,6 @@ public abstract class GShape {
 	
 	public void setSelected(boolean selected) {
 		this.selected = selected;
-		if(this.selected == true) {
-			this.anchors.setBoundingRect(this.shape.getBounds());
-		}
 	}
 
 	public GShape clone() {
@@ -37,33 +35,45 @@ public abstract class GShape {
 	
 	public void draw(Graphics2D graphics2d) {
 		graphics2d.draw(this.shape);
+		if(this.selected) {
+			this.anchors.setBoundingRect(this.shape.getBounds());
+			this.anchors.draw(graphics2d);
+		}
+	}
+	public void drawAnchors(Graphics2D graphics2d) {
+		this.anchors.setBoundingRect(this.shape.getBounds());
+		this.anchors.draw(graphics2d);
 	}
 	
 	//어느 앵커에 있는지 확인하는 메서드
 	public EOnState onShape(int x, int y) {
 		if(this.selected == true) {
-			EAnchors eAnchors = this.anchors.onShape(x, y);			
-			if(eAnchors.equals(EAnchors.RR)) { //Rotate
-				return EOnState.eOnRotate;
-			} else if(eAnchors == null) {	   // None	
+			EAnchors eAnchors = this.anchors.onShape(x, y);	
+			if(eAnchors == null) {	   				  // None	
 				if(this.shape.contains(x, y)) {
-					return EOnState.eOnshape;
+					return EOnState.eOnShape;
 				}
-			} else {						   // Resize
+			} else if(eAnchors.equals(EAnchors.RR)) { //Rotate
+				return EOnState.eOnRotate;
+			} else {						   		  // Resize
 				return EOnState.eOnResize;
 			}
 		} else {
 			if(this.shape.contains(x, y)) {
-				return EOnState.eOnshape;
+				return EOnState.eOnShape;
 			}
 		}
 		return null;
 	}
 	
-	
-	public void initMoving(int x, int y) {
+	public void initMoving(int x, int y, Graphics2D graphics2d) {
 		this.px = x;
 		this.py = y;
+		this.selected = true;
+		if(!this.selected) {
+			this.anchors.setBoundingRect(this.shape.getBounds());
+			this.anchors.draw(graphics2d);
+		}
 	}
 	
 	//Getter, Setter
