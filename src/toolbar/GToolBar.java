@@ -11,7 +11,7 @@ import javax.swing.JToolBar;
 import drawingPanel.GDrawingPanel;
 import global.GConstants.EToolbar;
 
-public class ToolBar extends JToolBar {
+public class GToolBar extends JToolBar {
 	//attributes
 	private static final long serialVersionUID = 1L;
 	
@@ -25,7 +25,7 @@ public class ToolBar extends JToolBar {
 		this.drawingPanel = drawingPanel;	
 	}
 	//여기서 자식을 new해주고 속성들의 값을 초기화 해주는 곳이다.
-	public ToolBar() {
+	public GToolBar() {
 		//하나 눌리면 하나가 빠지게 만들기 위해서 만든 객체
 		ButtonGroup buttonGroup = new ButtonGroup();
 		this.buttons = new Vector<JRadioButton>();

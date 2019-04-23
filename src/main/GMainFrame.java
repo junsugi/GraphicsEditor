@@ -7,14 +7,14 @@ import javax.swing.JFrame;
 import drawingPanel.GDrawingPanel;
 import global.GConstants.EMainFrame;
 import menu.GMenuBar;
-import toolbar.ToolBar;
+import toolbar.GToolBar;
 
 public class GMainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	//Components
 	private GMenuBar menuBar;
-	private ToolBar toolBar;
+	private GToolBar toolBar;
 	private GDrawingPanel drawingPanel;
 	
 	public GMainFrame() {
@@ -30,7 +30,7 @@ public class GMainFrame extends JFrame {
 		this.menuBar = new GMenuBar();
 		this.setJMenuBar(this.menuBar);
 		
-		this.toolBar = new ToolBar();
+		this.toolBar = new GToolBar();
 		this.add(this.toolBar, BorderLayout.NORTH);
 		
 		this.drawingPanel = new GDrawingPanel();
