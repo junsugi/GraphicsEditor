@@ -62,7 +62,7 @@ public abstract class GShape {
 		return null;
 	}
 	
-	public void initMoving(int x, int y, Graphics2D graphics2d) {
+	public void initMoving(Graphics2D graphics2d, int x, int y) {
 		this.px = x;
 		this.py = y;
 		if(!this.selected) {

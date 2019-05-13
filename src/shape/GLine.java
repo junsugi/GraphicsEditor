@@ -1,32 +1,38 @@
 package shape;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-
 public class GLine extends GShape{
-	
-	//원점은 꼭 있되, 두 점을 전부 가질 필요는 없다.
-	protected int x1, y1, x2, y2;
+
+	private java.awt.geom.Line2D line2D;
+
+	public GLine() {
+		super();
+		this.shape = new java.awt.geom.Line2D.Double(0, 0, 0, 0);
+		this.line2D = (java.awt.geom.Line2D) this.shape;
+	}
 	
 	public void setOrigin(int x, int y) {
-		this.x1 = x;
-		this.y1 = y;
-		this.x2 = x;
-		this.y2 = y;
+		this.line2D.setLine(x, y, x, y);
 	}
 	
 	public void setPoint(int x, int y) {
-		this.x2 = x;
-		this.y2 = y;
+		this.line2D.setLine(this.line2D.getX1(), this.line2D.getY1(), x, y);
 	}
 	
 	public void addPoint(int x, int y) {
-		
 	}
-
-	@Override
-	public void draw(Graphics2D graphics2d) {
-		graphics2d.drawLine(x1, y1, x2, y2);
+	
+	public boolean contains(int x, int y) {
+		boolean check = false;
+		if(this.line2D.getX1() < x && x < this.line2D.getX2()) {
+			if(this.line2D.getY1() < y && y < this.line2D.getY2()) {
+				check = true;
+				this.setSelected(true);
+			}
+		} else {
+			check = false;
+			this.setSelected(false);
+		}
+		return check;
 	}
 
 	@Override

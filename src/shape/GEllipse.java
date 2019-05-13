@@ -1,32 +1,27 @@
 package shape;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-
 public class GEllipse extends GShape{
+
+	private java.awt.geom.Ellipse2D ellipse2D;
+
+	public GEllipse() {
+		super();
+		this.shape = new java.awt.geom.Ellipse2D.Double(0, 0, 0, 0);
+		this.ellipse2D = (java.awt.geom.Ellipse2D) this.shape;
+	}
 	
-	//원점은 꼭 있되, 두 점을 전부 가질 필요는 없다.
-	protected int x1, y1, x2, y2;
-	
+	@Override
 	public void setOrigin(int x, int y) {
-		this.x1 = x;
-		this.y1 = y;
-		this.x2 = x;
-		this.y2 = y;
-	}
-	
-	public void setPoint(int x, int y) {
-		this.x2 = x;
-		this.y2 = y;
-	}
-	
-	public void addPoint(int x, int y) {
-		
+		this.ellipse2D.setFrame(x, y, 0, 0);
 	}
 
 	@Override
-	public void draw(Graphics2D graphics2d) {
-		graphics2d.drawOval(x1, y1, x2 - x1, y2 - y1);
+	public void setPoint(int x, int y) {
+		this.ellipse2D.setFrame(this.ellipse2D.getX(), this.ellipse2D.getY(), 
+				x - this.ellipse2D.getX(), y - this.ellipse2D.getY());
+	}
+
+	public void addPoint(int x, int y) {
 	}
 
 	@Override
@@ -40,5 +35,4 @@ public class GEllipse extends GShape{
 		// TODO Auto-generated method stub
 		
 	}
-	
 }

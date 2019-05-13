@@ -38,7 +38,6 @@ public class GAnchors {
 		return null;
 	}
 	
-	
 	public void draw(Graphics2D graphics2D) {
 		for(Shape shape : this.anchors) {
 			graphics2D.draw(shape);
