@@ -23,6 +23,6 @@ public class GMenuBar extends JMenuBar {
 	}
 
 	public void initialize() {
-		this.fileMenu.initialize();
+		this.fileMenu.initialize(this.drawingPanel);
 	}
 }

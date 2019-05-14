@@ -1,6 +1,8 @@
 package main;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
@@ -20,8 +22,11 @@ public class GMainFrame extends JFrame {
 	public GMainFrame() {
 		//속성부터 셋팅하고 속성은 내부에서 셋팅하기
 		//attributes
-		this.setLocation(EMainFrame.x.getValue(), EMainFrame.y.getValue());
 		this.setSize(EMainFrame.w.getValue(), EMainFrame.h.getValue());
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(
+				dim.width / 2 - this.getSize().width / 2, 
+				dim.height / 2 - this.getSize().height / 2);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		this.setLayout(new BorderLayout());

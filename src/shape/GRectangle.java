@@ -1,7 +1,6 @@
 package shape;
 
-public class GRectangle extends GShape{
-	
+public class GRectangle extends GShape {
 	//Adaptation
 	private java.awt.Rectangle rectangle;
 

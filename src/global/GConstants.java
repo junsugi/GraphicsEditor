@@ -57,18 +57,24 @@ public class GConstants {
 	}	
 	
 	public enum EFileMenu { 
-		newItem("new"),
-		openItem("open")
+		newItem("New", "nnew"),
+		openItem("Open", "open"),
+		saveItem("Save", "save"),
+		saveAsItem("Save as", "saveAs"),
+		closeItem("Close", "close")
 		;
 
 		private String text;
-		private	EFileMenu(String text){
+		private String method;
+		private	EFileMenu(String text, String method){
 			this.text = text;
+			this.method = method;
 		}
 		public String getText() {
 			return this.text;
 		}
+		public String getMethod() {
+			return this.method;
+		}
 	}
-	
-
 }
