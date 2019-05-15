@@ -5,6 +5,7 @@ import drawingPanel.GDrawingPanel;
 import global.GConstants.EMenu;
 
 public class GMenuBar extends JMenuBar {
+	//attribute
 	private static final long serialVersionUID = 1L;
 	
 	//components
@@ -23,6 +24,10 @@ public class GMenuBar extends JMenuBar {
 	}
 
 	public void initialize() {
-		this.fileMenu.initialize(this.drawingPanel);
+		//associate
+		this.fileMenu.associate(this.drawingPanel);
+		
+		//initialize
+		this.fileMenu.initialize();
 	}
 }

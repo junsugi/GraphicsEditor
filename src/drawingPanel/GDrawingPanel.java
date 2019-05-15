@@ -31,6 +31,12 @@ public class GDrawingPanel extends JPanel {
 	private Vector<GShape> shapeVector;
 	private GShape currentShape;
 	private GShape currentTool;
+	
+	public Vector<GShape> getShapeVector() {return this.shapeVector;}
+	public void setShapeVector(Object shapeVector) {
+		this.shapeVector = (Vector<GShape>) shapeVector;
+		this.repaint();
+	}
 
 	public void setCurrentTool(EToolbar currentTool) {
 		this.currentTool = currentTool.getShape();
@@ -205,7 +211,4 @@ public class GDrawingPanel extends JPanel {
 		public void mouseExited(MouseEvent event) {}
 
 	}
-
-	public Vector<GShape> getShapeVector() {return shapeVector;}
-	public void setShapeVector(Vector<GShape> shapeVector) {this.shapeVector = shapeVector;}
 }
