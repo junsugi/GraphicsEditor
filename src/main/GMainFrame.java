@@ -27,6 +27,7 @@ public class GMainFrame extends JFrame {
 		this.setLocation(
 				dim.width / 2 - this.getSize().width / 2, 
 				dim.height / 2 - this.getSize().height / 2);
+		//windowListener를 달아서 파일메뉴의 close를 부르게 해라
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		this.setLayout(new BorderLayout());
@@ -40,8 +41,6 @@ public class GMainFrame extends JFrame {
 		
 		this.drawingPanel = new GDrawingPanel();
 		this.add(this.drawingPanel, BorderLayout.CENTER);
-		
-		
 	}
 
 	public void initialize() {

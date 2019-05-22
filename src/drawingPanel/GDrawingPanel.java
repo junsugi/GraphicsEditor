@@ -20,21 +20,35 @@ import transformer.GRotator;
 import transformer.GTransformer;
 
 public class GDrawingPanel extends JPanel {
+	//attributes
 	private static final long serialVersionUID = 1L;
+
+	//Components
+	private MouseHandler mouseHandler;
+	private Vector<GShape> shapeVector;
 	
-	//상태를 n개의 점을 사용하는 도형, 두 점을 사용하는 도형으로 나눠라.
+	//Working Variable (잠깐 잠깐 사용하는 번수, 심각하게 관계를 고려하는 그런 애들은 아니다.)
 	private enum EActionState {eReady, eTransforming};
 	private EActionState eActionState;
-	private MouseHandler mouseHandler;
-	
+	private boolean updated;
+	public boolean isUpdated() {return this.updated;}
+	public void setUpdated(boolean updated) {this.updated = updated;}
+
 	private GTransformer transformer;
-	private Vector<GShape> shapeVector;
 	private GShape currentShape;
 	private GShape currentTool;
 	
-	public Vector<GShape> getShapeVector() {return this.shapeVector;}
-	public void setShapeVector(Object shapeVector) {
-		this.shapeVector = (Vector<GShape>) shapeVector;
+	public Vector<GShape> getShapeVector() {
+		return this.shapeVector;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void restoreShapeVector(Object shapeVector) {
+		if(shapeVector == null) {
+			this.shapeVector.clear();
+		} else {
+			this.shapeVector = (Vector<GShape>) shapeVector;
+		}
 		this.repaint();
 	}
 
@@ -54,6 +68,7 @@ public class GDrawingPanel extends JPanel {
 		
 		this.shapeVector = new Vector<GShape>();
 		this.transformer = null;
+		this.updated = false;
 	}
 	
 	public void initialize() {
@@ -129,6 +144,7 @@ public class GDrawingPanel extends JPanel {
 		if(this.transformer instanceof GDrawer) {
 			this.shapeVector.add(this.currentShape);
 		}
+		this.updated = true;
 	}
 	
 	private void continueDrawing(int x, int y) {
