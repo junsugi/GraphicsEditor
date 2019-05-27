@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 public class GSelect extends GShape{
+	private static final long serialVersionUID = 1L;
 	
 	//원점은 꼭 있되, 두 점을 전부 가질 필요는 없다.
 	protected int x1, y1, x2, y2;

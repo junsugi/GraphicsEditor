@@ -51,17 +51,27 @@ public class GFileMenu extends JMenu {
 	}
 	
 	public void nnew() {
-		if(this.drawingPanel.isUpdated()) {
-			this.save();
-		}
+		this.save();
 		this.drawingPanel.restoreShapeVector(null);
 		this.drawingPanel.setUpdated(true);
 	}
 	
-	public void open() {
-		if(this.drawingPanel.isUpdated()) {
-			this.save();
+	private void readObject() {
+		try {
+			ObjectInputStream objectInputStream = new ObjectInputStream(
+					new BufferedInputStream(new FileInputStream(this.file)));
+			this.drawingPanel.restoreShapeVector(objectInputStream.readObject());
+			objectInputStream.close();
+			this.drawingPanel.setUpdated(false);
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
 		}
+	}
+	
+	//현재파일인지를 확인한다.
+	public void open() {
+		this.save();
+		
 		JFileChooser chooser = new JFileChooser(this.directory);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Graphics Data", "god");
 		chooser.setFileFilter(filter);
@@ -69,15 +79,19 @@ public class GFileMenu extends JMenu {
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			this.directory = chooser.getCurrentDirectory();
 			this.file = chooser.getSelectedFile();
-			try {
-				ObjectInputStream objectInputStream = new ObjectInputStream(
-						new BufferedInputStream(new FileInputStream(this.file)));
-				this.drawingPanel.restoreShapeVector(objectInputStream.readObject());
-				objectInputStream.close();
-				this.drawingPanel.setUpdated(false);
-			} catch (IOException | ClassNotFoundException e) {
-				e.printStackTrace();
-			}
+			this.readObject();
+		}	
+	}
+
+	private void writeObject() {
+		try {
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(
+					new BufferedOutputStream(new FileOutputStream(this.file)));
+			objectOutputStream.writeObject(this.drawingPanel.getShapeVector());
+			objectOutputStream.close();
+			this.drawingPanel.setUpdated(false);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}	
 	}
 	
@@ -85,20 +99,24 @@ public class GFileMenu extends JMenu {
 	//new를 누르고 그림판을 할 때는 save_as로 빠져서 저장된다.
 	public void save() {
 		if(this.drawingPanel.isUpdated()) {
-			try {
-				ObjectOutputStream objectOutputStream = new ObjectOutputStream(
-						new BufferedOutputStream(new FileOutputStream(file)));
-				objectOutputStream.writeObject(this.drawingPanel.getShapeVector());
-				objectOutputStream.close();
-				this.drawingPanel.setUpdated(false);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}	
+			if(this.file == null) {
+				this.saveAs();
+			} else {
+				this.writeObject();
+			}
 		}
 	}
 	
 	public void saveAs() {
-		this.drawingPanel.setUpdated(false);
+		JFileChooser chooser = new JFileChooser(this.directory);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Graphics Data", "god");
+		chooser.setFileFilter(filter);
+		int returnVal = chooser.showSaveDialog(this.drawingPanel);
+		if(returnVal == JFileChooser.APPROVE_OPTION) {
+			this.directory = chooser.getCurrentDirectory();
+			this.file = chooser.getSelectedFile();
+			this.writeObject();
+		}
 	}
 	
 	public void close() {
@@ -109,7 +127,7 @@ public class GFileMenu extends JMenu {
 	public void print() {
 		
 	}
-
+	
 	private void invokeMethod(String actionCommand) {
 		try {
 			this.getClass().getMethod(actionCommand).invoke(this);

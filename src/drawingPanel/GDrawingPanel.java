@@ -150,6 +150,20 @@ public class GDrawingPanel extends JPanel {
 	private void continueDrawing(int x, int y) {
 		this.currentShape.addPoint(x, y);
 	}
+	
+
+	public void cut() {
+		// TODO Auto-generated method stub
+		
+	}
+	public void copy() {
+		// TODO Auto-generated method stub
+		
+	}
+	public void paste() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	//잡다한 코드 넣지말고 함수 호출만 한다. (교통정리만 한다. event action mapping, control tower, state transition(=event) mapping)
 	private class MouseHandler implements MouseListener, MouseMotionListener  {

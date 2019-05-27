@@ -28,9 +28,7 @@ public abstract class GShape implements Cloneable, Serializable{
 	public GShape clone() {
 		try {
 			return (GShape)this.getClass().newInstance();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
 		return null;
