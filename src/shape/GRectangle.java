@@ -1,6 +1,8 @@
 package shape;
 
 public class GRectangle extends GShape {
+	private static final long serialVersionUID = 1L;
+	
 	//Adaptation
 	private java.awt.Rectangle rectangle;
 
@@ -35,5 +37,10 @@ public class GRectangle extends GShape {
 
 	@Override
 	public void finishMoving(int x, int y) {		
+	}
+
+	@Override
+	public GShape newInstance() {
+		return new GRectangle();
 	}
 }

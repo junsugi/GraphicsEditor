@@ -39,4 +39,9 @@ public class GPolygon extends GShape {
 	public void finishMoving(int x, int y) {
 	}
 
+	@Override
+	public GShape newInstance() {
+		return new GPolygon();
+	}
+
 }

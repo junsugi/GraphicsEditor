@@ -46,4 +46,10 @@ public class GLine extends GShape{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public GShape newInstance() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

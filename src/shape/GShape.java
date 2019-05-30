@@ -27,12 +27,15 @@ public abstract class GShape implements Cloneable, Serializable{
 
 	public GShape clone() {
 		try {
-			return (GShape)this.getClass().newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
+			return (GShape)super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
 	}
+	
+	abstract public GShape newInstance();
 	
 	public void draw(Graphics2D graphics2d) {
 		graphics2d.draw(this.shape);

@@ -26,6 +26,7 @@ public class GDrawingPanel extends JPanel {
 	//Components
 	private MouseHandler mouseHandler;
 	private Vector<GShape> shapeVector;
+	private GClipboard clipboard;
 	
 	//Working Variable (잠깐 잠깐 사용하는 번수, 심각하게 관계를 고려하는 그런 애들은 아니다.)
 	private enum EActionState {eReady, eTransforming};
@@ -58,6 +59,7 @@ public class GDrawingPanel extends JPanel {
 
 	public GDrawingPanel() {
 		this.eActionState = EActionState.eReady;
+		this.updated = false;
 		
 		this.setBackground(Color.white);
 		this.setForeground(Color.black);
@@ -66,9 +68,10 @@ public class GDrawingPanel extends JPanel {
 		this.addMouseListener(this.mouseHandler);		//버튼이벤트
 		this.addMouseMotionListener(this.mouseHandler);	//마우스의 움직임을 인지하는 이벤트
 		
+		this.clipboard = new GClipboard();
+		
 		this.shapeVector = new Vector<GShape>();
 		this.transformer = null;
-		this.updated = false;
 	}
 	
 	public void initialize() {
@@ -127,7 +130,7 @@ public class GDrawingPanel extends JPanel {
 	
 	private void initTransforming(int x, int y) {
 		if(this.transformer instanceof GDrawer) {
-			this.currentShape = this.currentTool.clone();
+			this.currentShape = this.currentTool.newInstance();
 		}
 		this.transformer.setShape(this.currentShape);
 		this.transformer.initTransforming((Graphics2D)this.getGraphics(), x, y);
@@ -153,15 +156,27 @@ public class GDrawingPanel extends JPanel {
 	
 
 	public void cut() {
-		// TODO Auto-generated method stub
+		Vector<GShape> selectedShapes = new Vector<GShape>();
+		for(int i = this.shapeVector.size() - 1 ; i >= 0; i--) {
+			if(this.shapeVector.get(i).isSelected()) {
+				selectedShapes.add(this.shapeVector.get(i));
+				this.shapeVector.remove(i);
+			}
+		}
+		this.clipboard.setContents(selectedShapes);
+		this.repaint();
 		
 	}
+	
 	public void copy() {
 		// TODO Auto-generated method stub
 		
 	}
+	
 	public void paste() {
-		// TODO Auto-generated method stub
+		Vector<GShape> shapes = this.clipboard.getContents();
+		this.shapeVector.addAll(shapes);
+		this.repaint();
 		
 	}
 
