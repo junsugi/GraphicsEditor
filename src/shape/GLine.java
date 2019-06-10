@@ -1,7 +1,8 @@
 package shape;
 
 public class GLine extends GShape{
-
+	private static final long serialVersionUID = 1L;
+	
 	private java.awt.geom.Line2D line2D;
 
 	public GLine() {

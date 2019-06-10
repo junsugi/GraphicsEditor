@@ -21,7 +21,7 @@ public class GConstants {
 	}
 	
 	public enum EToolbar {
-		select("select", new GSelect()),
+		select("select", new GGroup()),
 		rectangle("retangle", new GRectangle()),
 		ellipse("ellipse", new GEllipse()),
 		line("line", new GLine()),

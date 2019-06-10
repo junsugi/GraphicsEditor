@@ -10,6 +10,7 @@ import java.util.Vector;
 import javax.swing.JPanel;
 
 import global.GConstants.EToolbar;
+import shape.GGroup;
 import shape.GPolygon;
 import shape.GShape;
 import shape.GShape.EOnState;
@@ -100,6 +101,12 @@ public class GDrawingPanel extends JPanel {
 		return null;
 	}
 	
+	private void clearSelected() {
+		for(GShape shape : this.shapeVector) {
+			shape.setSelected(false);
+		}
+	}
+	
 	//actionstate를 바꿔줘야 한다.
 	//아무 shape에도 없다 = null
 	//currentShape에 있으면 
@@ -108,8 +115,13 @@ public class GDrawingPanel extends JPanel {
 	private void selectTransforming(int x, int y) {
 		EOnState eOnState = this.onShape(x, y);
 		if(eOnState == null) {
+			this.clearSelected();
 			this.transformer = new GDrawer();
 		} else {
+			if(!this.currentShape.isSelected()) {
+				this.clearSelected();
+				this.currentShape.setSelected(true);
+			}
 			switch(eOnState) {
 			case eOnShape:
 				this.transformer = new GMover();
@@ -135,7 +147,7 @@ public class GDrawingPanel extends JPanel {
 		this.transformer.setShape(this.currentShape);
 		this.transformer.initTransforming((Graphics2D)this.getGraphics(), x, y);
 	}
-	
+
 	private void keepTransforming(int x, int y) {
 		Graphics2D graphics2d = (Graphics2D)this.getGraphics();
 		graphics2d.setXORMode(this.getBackground());
@@ -145,15 +157,19 @@ public class GDrawingPanel extends JPanel {
 	private void finishTransforming(int x, int y) {
 		this.transformer.finishTransforming((Graphics2D)this.getGraphics(), x, y);
 		if(this.transformer instanceof GDrawer) {
-			this.shapeVector.add(this.currentShape);
+			if(this.currentShape instanceof GGroup) {
+				((GGroup)this.currentShape).contains(this.shapeVector);
+			} else {
+				this.shapeVector.add(this.currentShape);
+			}
 		}
+		this.repaint();
 		this.updated = true;
 	}
 	
 	private void continueDrawing(int x, int y) {
 		this.currentShape.addPoint(x, y);
 	}
-	
 
 	public void cut() {
 		Vector<GShape> selectedShapes = new Vector<GShape>();
@@ -169,7 +185,7 @@ public class GDrawingPanel extends JPanel {
 	}
 	
 	public void copy() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 	
