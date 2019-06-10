@@ -1,20 +1,29 @@
 package shape;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import shape.GAnchors.EAnchors;
 
 public abstract class GShape implements Cloneable, Serializable{
-	private static final long serialVersionUID = 1L;
-	
 	//eOnShape = Move
 	public enum EOnState {eOnShape, eOnResize, eOnRotate};
-	protected Shape shape;
-	//previous x,y
-	protected int px, py;
+	
+	//attributes
+	private static final long serialVersionUID = 1L;
+	protected int px, py;	//previous x,y
 	private boolean selected;
+	
+	//Components
+	protected Shape shape;
 	private GAnchors anchors;
+	
+	
 	
 	public GShape() {
 		this.selected = false;
@@ -25,11 +34,19 @@ public abstract class GShape implements Cloneable, Serializable{
 		this.selected = selected;
 	}
 
+	//Deep Clone
 	public GShape clone() {
 		try {
-			return (GShape)super.clone();
-		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+			objectOutputStream.writeObject(this);
+			
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+			ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+			
+			return (GShape) objectInputStream.readObject();
+			
+		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		return null;
